@@ -378,42 +378,21 @@ namespace OpenRA
 				if (header.TilesOffset > 0)
 				{
 					s.Position = header.TilesOffset;
-					for (var i = 0; i < MapSize.X; i++)
-					{
-						for (var j = 0; j < MapSize.Y; j++)
-						{
-							var tile = s.ReadUInt16();
-							var index = s.ReadUInt8();
-
-							// TODO: Remember to remove this when rewriting tile variants / PickAny
-							if (index == byte.MaxValue)
-								index = (byte)(i % 4 + (j % 4) * 4);
-
-							Tiles[new MPos(i, j)] = new TerrainTile(tile, index);
-						}
-					}
+					m3(s);
 				}
 
 				if (header.ResourcesOffset > 0)
 				{
 					s.Position = header.ResourcesOffset;
-					for (var i = 0; i < MapSize.X; i++)
-					{
-						for (var j = 0; j < MapSize.Y; j++)
-						{
-							var type = s.ReadUInt8();
-							var density = s.ReadUInt8();
-							Resources[new MPos(i, j)] = new ResourceTile(type, density);
-						}
-					}
+					m5(s);
 				}
 
 				if (header.HeightsOffset > 0)
 				{
 					s.Position = header.HeightsOffset;
-					for (var i = 0; i < MapSize.X; i++)
-						for (var j = 0; j < MapSize.Y; j++)
-							Height[new MPos(i, j)] = s.ReadUInt8().Clamp((byte)0, Grid.MaximumTerrainHeight);
+					m7(s);
+					/*for (var i = 0; i < MapSize.X; i++)
+						m6(i, s);*/
 				}
 			}
 
@@ -428,7 +407,57 @@ namespace OpenRA
 
 			Uid = ComputeUID(Package, MapFormat);
 		}
+		void m1(byte index,int i,int j,ushort tile)
+		{
+			if (index == byte.MaxValue)
+				index = (byte)(i % 4 + (j % 4) * 4);
 
+			Tiles[new MPos(i, j)] = new TerrainTile(tile, index);
+		}
+		void m2(Stream s, int i)
+		{
+			for (var j = 0; j < MapSize.Y; j++)
+			{
+				var tile = s.ReadUInt16();
+				var index = s.ReadUInt8();
+
+				// TODO: Remember to remove this when rewriting tile variants / PickAny
+				m1(index,i,j,tile);
+			}
+		}
+		void m3(Stream s)
+		{
+			for (var i = 0; i < MapSize.X; i++)
+			{
+				m2(s, i);
+			}
+		}
+		void m4(Stream s, int i)
+		{
+			for (var j = 0; j < MapSize.Y; j++)
+			{
+				var type = s.ReadUInt8();
+				var density = s.ReadUInt8();
+				Resources[new MPos(i, j)] = new ResourceTile(type, density);
+			}
+		}
+		void m5(Stream s)
+		{
+			for (var i = 0; i < MapSize.X; i++)
+			{
+				m4(s, i);
+			}
+		}
+		void m6(int i,Stream s)
+		{
+			for (var j = 0; j < MapSize.Y; j++)
+				Height[new MPos(i, j)] = s.ReadUInt8().Clamp((byte)0, Grid.MaximumTerrainHeight);
+		}
+		void m7(Stream s)
+		{
+			for (var i = 0; i < MapSize.X; i++)
+				m6(i, s);
+		}
 		void PostInit()
 		{
 			try
@@ -733,7 +762,7 @@ namespace OpenRA
 		public byte[] SavePreview()
 		{
 			var actorTypes = Rules.Actors.Values.Where(a => a.HasTraitInfo<IMapPreviewSignatureInfo>());
-			var actors = ActorDefinitions.Where(a => actorTypes.Where(ai => ai.Name == a.Value.Value).Any());
+			var actors = ActorDefinitions.Where(a => actorTypes.Any(ai => ai.Name == a.Value.Value));
 			var positions = new List<(MPos Position, Color Color)>();
 			foreach (var actor in actors)
 			{
@@ -1224,11 +1253,8 @@ namespace OpenRA
 		{
 			return ChooseClosestEdgeCell(cell.ToMPos(Grid.Type)).ToCPos(Grid.Type);
 		}
-
-		public MPos ChooseClosestEdgeCell(MPos uv)
+		private PPos Methd1(PPos[] allProjected)
 		{
-			var allProjected = ProjectedCellsCovering(uv);
-
 			PPos edge;
 			if (allProjected.Length > 0)
 			{
@@ -1244,6 +1270,13 @@ namespace OpenRA
 			else
 				edge = new PPos(Bounds.Left, Bounds.Top);
 
+			return edge;
+		}
+		public MPos ChooseClosestEdgeCell(MPos uv)
+		{
+			var allProjected = ProjectedCellsCovering(uv);
+
+			var edge = Methd1(allProjected);
 			var unProjected = Unproject(edge);
 			if (unProjected.Count == 0)
 			{
@@ -1331,7 +1364,7 @@ namespace OpenRA
 			if (maxRange >= Grid.TilesByDistance.Length)
 				throw new ArgumentOutOfRangeException(nameof(maxRange),
 					$"The requested range ({maxRange}) cannot exceed the value of MaximumTileSearchRange ({Grid.MaximumTileSearchRange})");
-			return FindTilesInAnnulusIterator(center, minRange, maxRange, allowOutsideBounds=false);
+			return FindTilesInAnnulusIterator(center, minRange, maxRange, allowOutsideBounds);
 		}
 
 		private IEnumerable<CPos> FindTilesInAnnulusIterator(CPos center, int minRange, int maxRange, bool allowOutsideBounds = false)
