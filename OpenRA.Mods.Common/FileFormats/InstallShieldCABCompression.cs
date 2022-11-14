@@ -322,7 +322,7 @@ namespace OpenRA.Mods.Common.FileFormats
 
 			void FileIndex(VolumeHeader head)
 			{
-				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+				if (file.Flags.HasFlag(CAB.FileCompressed))
 					remainingInArchive = head.LastFileSizeCompressed;
 				else
 					remainingInArchive = head.LastFileSizeExpanded;
@@ -330,7 +330,7 @@ namespace OpenRA.Mods.Common.FileFormats
 
 			void FileHasFlags()
 			{
-				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+				if (file.Flags.HasFlag(CAB.FileCompressed))
 					remainingInArchive = file.CompressedSize;
 				else
 					remainingInArchive = file.ExpandedSize;
@@ -338,7 +338,7 @@ namespace OpenRA.Mods.Common.FileFormats
 
 			void FileFlagsRemainingArchives(VolumeHeader head)
 			{
-				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+				if (file.Flags.HasFlag(CAB.FileCompressed))
 					remainingInArchive = head.FirstFileSizeCompressed;
 				else
 					remainingInArchive = head.FirstFileSizeExpanded;
