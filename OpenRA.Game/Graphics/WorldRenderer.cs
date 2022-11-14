@@ -305,36 +305,18 @@ namespace OpenRA.Graphics
 			// Engine debugging overlays
 			if (debugVis.Value != null && debugVis.Value.RenderGeometry)
 			{
-				for (var i = 0; i < preparedRenderables.Count; i++)
-					preparedRenderables[i].RenderDebugGeometry(this);
+				Method4();
 
-				for (var i = 0; i < preparedOverlayRenderables.Count; i++)
-					preparedOverlayRenderables[i].RenderDebugGeometry(this);
+				Method5();
 
-				for (var i = 0; i < preparedAnnotationRenderables.Count; i++)
-					preparedAnnotationRenderables[i].RenderDebugGeometry(this);
+				Method6();
 			}
 
 			if (debugVis.Value != null && debugVis.Value.ScreenMap)
 			{
-				foreach (var r in World.ScreenMap.RenderBounds(World.RenderPlayer))
-				{
-					var tl = Viewport.WorldToViewPx(new float2(r.Left, r.Top));
-					var br = Viewport.WorldToViewPx(new float2(r.Right, r.Bottom));
-					Game.Renderer.RgbaColorRenderer.DrawRect(tl, br, 1, Color.MediumSpringGreen);
-				}
+				Method3();
 
-				foreach (var b in World.ScreenMap.MouseBounds(World.RenderPlayer))
-				{
-					var points = new float2[b.Vertices.Length];
-					for (var index = 0; index < b.Vertices.Length; index++)
-					{
-						var vertex = b.Vertices[index];
-						points[index] = Viewport.WorldToViewPx(vertex).ToFloat2();
-					}
-
-					Game.Renderer.RgbaColorRenderer.DrawPolygon(points, 1, Color.OrangeRed);
-				}
+				Method2();
 			}
 
 			Game.Renderer.Flush();
@@ -342,6 +324,53 @@ namespace OpenRA.Graphics
 			preparedRenderables.Clear();
 			preparedOverlayRenderables.Clear();
 			preparedAnnotationRenderables.Clear();
+		}
+
+		void Method1(float2[] points, Polygon b)
+		{
+			for (var index = 0; index < b.Vertices.Length; index++)
+			{
+				var vertex = b.Vertices[index];
+				points[index] = Viewport.WorldToViewPx(vertex).ToFloat2();
+			}
+		}
+
+		void Method2()
+		{
+			foreach (var b in World.ScreenMap.MouseBounds(World.RenderPlayer))
+			{
+				var points = new float2[b.Vertices.Length];
+				Method1(points, b);
+				Game.Renderer.RgbaColorRenderer.DrawPolygon(points, 1, Color.OrangeRed);
+			}
+		}
+
+		void Method3()
+		{
+			foreach (var r in World.ScreenMap.RenderBounds(World.RenderPlayer))
+			{
+				var tl = Viewport.WorldToViewPx(new float2(r.Left, r.Top));
+				var br = Viewport.WorldToViewPx(new float2(r.Right, r.Bottom));
+				Game.Renderer.RgbaColorRenderer.DrawRect(tl, br, 1, Color.MediumSpringGreen);
+			}
+		}
+
+		void Method4()
+		{
+			for (var i = 0; i < preparedRenderables.Count; i++)
+				preparedRenderables[i].RenderDebugGeometry(this);
+		}
+
+		void Method5()
+		{
+			for (var i = 0; i < preparedOverlayRenderables.Count; i++)
+				preparedOverlayRenderables[i].RenderDebugGeometry(this);
+		}
+
+		void Method6()
+		{
+			for (var i = 0; i < preparedAnnotationRenderables.Count; i++)
+				preparedAnnotationRenderables[i].RenderDebugGeometry(this);
 		}
 
 		public void RefreshPalette()

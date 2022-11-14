@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 
 namespace OpenRA.Mods.Common.FileFormats
@@ -299,20 +300,12 @@ namespace OpenRA.Mods.Common.FileFormats
 					var head = new VolumeHeader(currentVolume);
 					if (file.Index == head.LastFileIndex)
 					{
-						if (file.Flags.HasFlag(CABFlags.FileCompressed))
-							remainingInArchive = head.LastFileSizeCompressed;
-						else
-							remainingInArchive = head.LastFileSizeExpanded;
-
+						FileIndex(head);
 						fileOffset = head.LastFileOffset;
 					}
 					else if (file.Index == head.FirstFileIndex)
 					{
-						if (file.Flags.HasFlag(CABFlags.FileCompressed))
-							remainingInArchive = head.FirstFileSizeCompressed;
-						else
-							remainingInArchive = head.FirstFileSizeExpanded;
-
+						FileFlagsRemainingArchives(head);
 						fileOffset = head.FirstFileOffset;
 					}
 					else
@@ -320,15 +313,35 @@ namespace OpenRA.Mods.Common.FileFormats
 				}
 				else
 				{
-					if (file.Flags.HasFlag(CABFlags.FileCompressed))
-						remainingInArchive = file.CompressedSize;
-					else
-						remainingInArchive = file.ExpandedSize;
-
+					FileHasFlags();
 					fileOffset = file.DataOffset;
 				}
 
 				currentVolume.Position = fileOffset;
+			}
+
+			void FileIndex(VolumeHeader head)
+			{
+				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+					remainingInArchive = head.LastFileSizeCompressed;
+				else
+					remainingInArchive = head.LastFileSizeExpanded;
+			}
+
+			void FileHasFlags()
+			{
+				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+					remainingInArchive = file.CompressedSize;
+				else
+					remainingInArchive = file.ExpandedSize;
+			}
+
+			void FileFlagsRemainingArchives(VolumeHeader head)
+			{
+				if (file.Flags.HasFlag(CABFlags.FileCompressed))
+					remainingInArchive = head.FirstFileSizeCompressed;
+				else
+					remainingInArchive = head.FirstFileSizeExpanded;
 			}
 		}
 
