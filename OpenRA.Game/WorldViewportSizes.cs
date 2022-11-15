@@ -27,9 +27,11 @@ namespace OpenRA
 
 		public Int2 GetSizeRange(WorldViewport distance)
 		{
-			return distance == WorldViewport.Close ? CloseWindowHeights
-				: distance == WorldViewport.Medium ? MediumWindowHeights
-				: FarWindowHeights;
+			if (distance == WorldViewport.Close)
+				return CloseWindowHeights;
+			else if (distance == WorldViewport.Medium)
+				return MediumWindowHeights;
+			else return FarWindowHeights; 
 		}
 	}
 }

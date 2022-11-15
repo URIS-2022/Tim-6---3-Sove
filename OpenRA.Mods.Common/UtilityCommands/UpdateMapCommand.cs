@@ -49,7 +49,7 @@ namespace OpenRA.Mods.Common.UtilityCommands
 
 				var ruleGroups = new Dictionary<string, List<string>>();
 
-				m1(args,ruleGroups,modData);
+				m1(args, ruleGroups, modData);
 				// Print known tags
 				// Print known rules
 				Console.WriteLine("   Individual Rules:");

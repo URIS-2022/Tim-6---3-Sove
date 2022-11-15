@@ -93,31 +93,49 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 				panel.Get<MapPreviewWidget>("MAP_PREVIEW").Preview = () => preview;
 
 				var titleLabel = panel.GetOrNull<LabelWithTooltipWidget>("MAP_TITLE");
+				m2(titleLabel);
+
+				var typeLabel = panel.GetOrNull<LabelWidget>("MAP_TYPE");
+				m3(titleLabel);
+
+				var authorLabel = panel.GetOrNull<LabelWidget>("MAP_AUTHOR");
+				m4(authorLabel);
+			}
+
+			void m1(string truncated, MapPreview m,LabelWithTooltipWidget titleLabel)
+			{
+				if (m.Title != truncated)
+					titleLabel.GetTooltipText = () => m.Title;
+				else
+					titleLabel.GetTooltipText = null;
+			}
+
+			void m2(LabelWithTooltipWidget titleLabel)
+			{
 				if (titleLabel != null)
 				{
 					var font = Game.Renderer.Fonts[titleLabel.Font];
 					var title = new CachedTransform<MapPreview, string>(m =>
 					{
 						var truncated = WidgetUtils.TruncateText(m.Title, titleLabel.Bounds.Width, font);
-
-						if (m.Title != truncated)
-							titleLabel.GetTooltipText = () => m.Title;
-						else
-							titleLabel.GetTooltipText = null;
-
+						m1(truncated, m, titleLabel);
 						return truncated;
 					});
 					titleLabel.GetText = () => title.Update(preview);
 				}
+			}
 
-				var typeLabel = panel.GetOrNull<LabelWidget>("MAP_TYPE");
+			void m3(LabelWidget typeLabel)
+			{
 				if (typeLabel != null)
 				{
 					var type = new CachedTransform<MapPreview, string>(m => m.Categories.FirstOrDefault() ?? "");
 					typeLabel.GetText = () => type.Update(preview);
 				}
+			}
 
-				var authorLabel = panel.GetOrNull<LabelWidget>("MAP_AUTHOR");
+			void m4(LabelWidget authorLabel)
+			{
 				if (authorLabel != null)
 				{
 					var font = Game.Renderer.Fonts[authorLabel.Font];
@@ -163,12 +181,10 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 					(Nat.Status == NatStatus.NotSupported || Nat.Status == NatStatus.Disabled);
 
 				var settingsA = noticesNoUPnP.GetOrNull("SETTINGS_A");
-				if (settingsA != null)
-					settingsA.IsVisible = () => Nat.Status == NatStatus.Disabled;
+				f1(settingsA);
 
 				var settingsB = noticesNoUPnP.GetOrNull("SETTINGS_B");
-				if (settingsB != null)
-					settingsB.IsVisible = () => Nat.Status == NatStatus.Disabled;
+				f1(settingsB);
 			}
 
 			var noticesUPnP = panel.GetOrNull("NOTICES_UPNP");
@@ -180,6 +196,11 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 				noticesLAN.IsVisible = () => !advertiseOnline;
 
 			BuildNotices();
+		}
+		void f1(Widget settings)
+		{
+			if (settings != null)
+				settings.IsVisible = () => Nat.Status == NatStatus.Disabled;
 		}
 
 		void BuildNotices()

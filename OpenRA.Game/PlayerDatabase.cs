@@ -111,7 +111,14 @@ namespace OpenRA
 		public Sprite GetIcon(PlayerBadge badge)
 		{
 			var ws = Game.Renderer.WindowScale;
-			var density = ws > 2 ? 3 : ws > 1 ? 2 : 1;
+			int density;
+			if (ws > 2)
+				density = 3;
+			else if (ws > 1)
+				density = 2;
+			else
+				density = 1;
+
 			return iconCache[(badge, density)];
 		}
 	}
