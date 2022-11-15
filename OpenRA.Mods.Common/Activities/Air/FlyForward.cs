@@ -22,13 +22,13 @@ namespace OpenRA.Mods.Common.Activities
 		int remainingDistance;
 		int ticks;
 
-		FlyForward(Actor self)
+		public FlyForward(Actor self)
 		{
 			aircraft = self.Trait<Aircraft>();
 			cruiseAltitude = aircraft.Info.CruiseAltitude;
 		}
 
-		public FlyForward(Actor self, int ticks = -1)
+		public FlyForward(Actor self, int ticks)
 			: this(self)
 		{
 			flyTicks = ticks;

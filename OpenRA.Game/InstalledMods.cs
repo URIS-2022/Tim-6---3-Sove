@@ -32,7 +32,7 @@ namespace OpenRA
 
 		static IEnumerable<(string Id, string Path)> GetCandidateMods(IEnumerable<string> searchPaths)
 		{
-			var mods = new List<(string, string)>();
+			var modss = new List<(string, string)>();
 			foreach (var path in searchPaths)
 			{
 				try
@@ -43,7 +43,7 @@ namespace OpenRA
 
 					var directory = new DirectoryInfo(resolved);
 					foreach (var subdir in directory.EnumerateDirectories())
-						mods.Add((subdir.Name, subdir.FullName));
+						modss.Add((subdir.Name, subdir.FullName));
 				}
 				catch (Exception e)
 				{
@@ -51,7 +51,7 @@ namespace OpenRA
 				}
 			}
 
-			return mods;
+			return modss;
 		}
 
 		Manifest LoadMod(string id, string path)

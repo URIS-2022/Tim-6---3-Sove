@@ -190,6 +190,44 @@ namespace OpenRA
 		/// * Filename doesn't match internal key
 		/// * Fails to parse as a mod registration
 		/// </summary>
+		internal void HelperMethod(string path)
+		{
+			string modKey = null;
+			try
+			{
+				var yaml = MiniYaml.FromStream(File.OpenRead(path), path).First().Value;
+				var m = FieldLoader.Load<ExternalMod>(yaml);
+				modKey = ExternalMod.MakeKey(m);
+
+				// Continue to the next entry if this one is valid
+				// HACK: Explicitly invalidate paths to OpenRA.dll to clean up bogus metadata files
+				// that were created after the initial migration from .NET Framework to Core/5.
+				if (File.Exists(m.LaunchPath) && Path.GetFileNameWithoutExtension(path) == modKey && Path.GetExtension(m.LaunchPath) != ".dll")
+					return;
+			}
+			catch (Exception e)
+			{
+				Log.Write("debug", "Failed to parse mod metadata file '{0}'", path);
+				Log.Write("debug", e.ToString());
+			}
+
+			// Remove from the ingame mod switcher
+			if (Path.GetFileNameWithoutExtension(path) == modKey)
+				mods.Remove(modKey);
+
+			// Remove stale or corrupted metadata
+			try
+			{
+				File.Delete(path);
+				Log.Write("debug", "Removed invalid mod metadata file '{0}'", path);
+			}
+			catch (Exception e)
+			{
+				Log.Write("debug", "Failed to remove mod metadata file '{0}'", path);
+				Log.Write("debug", e.ToString());
+			}
+		}
+
 		internal void ClearInvalidRegistrations(ModRegistrations registration)
 		{
 			foreach (var source in GetSupportDirs(registration))
@@ -197,43 +235,9 @@ namespace OpenRA
 				var metadataPath = Path.Combine(source, "ModMetadata");
 				if (!Directory.Exists(metadataPath))
 					continue;
-
 				foreach (var path in Directory.GetFiles(metadataPath, "*.yaml"))
 				{
-					string modKey = null;
-					try
-					{
-						var yaml = MiniYaml.FromStream(File.OpenRead(path), path).First().Value;
-						var m = FieldLoader.Load<ExternalMod>(yaml);
-						modKey = ExternalMod.MakeKey(m);
-
-						// Continue to the next entry if this one is valid
-						// HACK: Explicitly invalidate paths to OpenRA.dll to clean up bogus metadata files
-						// that were created after the initial migration from .NET Framework to Core/5.
-						if (File.Exists(m.LaunchPath) && Path.GetFileNameWithoutExtension(path) == modKey && Path.GetExtension(m.LaunchPath) != ".dll")
-							continue;
-					}
-					catch (Exception e)
-					{
-						Log.Write("debug", "Failed to parse mod metadata file '{0}'", path);
-						Log.Write("debug", e.ToString());
-					}
-
-					// Remove from the ingame mod switcher
-					if (Path.GetFileNameWithoutExtension(path) == modKey)
-						mods.Remove(modKey);
-
-					// Remove stale or corrupted metadata
-					try
-					{
-						File.Delete(path);
-						Log.Write("debug", "Removed invalid mod metadata file '{0}'", path);
-					}
-					catch (Exception e)
-					{
-						Log.Write("debug", "Failed to remove mod metadata file '{0}'", path);
-						Log.Write("debug", e.ToString());
-					}
+					HelperMethod(path);
 				}
 			}
 		}

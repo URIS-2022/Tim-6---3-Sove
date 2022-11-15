@@ -104,7 +104,7 @@ namespace OpenRA.FileSystem
 		}
 
 		public void Dispose() {
-			throw new NotSupportedException();
+			// Still not implemented
 		}
 	}
 }
