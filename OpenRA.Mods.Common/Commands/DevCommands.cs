@@ -91,7 +91,7 @@ namespace OpenRA.Mods.Common.Commands
 			{ "player-experience", (PlayerExperienceDescription, PlayerExperience) },
 			{ "power-outage", (PowerOutageDescription, PowerOutage) },
 			{ "kill", (KillSelectedActorsDescription, Kill) },
-			{ "dispose", (DisposeSelectedActorsDescription, Dispose) }
+			{ "dispose", (DisposeSelectedActorsDescription, Disposee) }
 		};
 
 		World world;
@@ -238,7 +238,7 @@ namespace OpenRA.Mods.Common.Commands
 			}
 		}
 
-		static void Dispose(string arg, World world)
+		static void Disposee(string arg, World world)
 		{
 			foreach (var actor in world.Selection.Actors)
 			{

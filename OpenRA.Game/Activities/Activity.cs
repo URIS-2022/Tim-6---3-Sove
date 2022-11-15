@@ -279,9 +279,6 @@ namespace OpenRA.Activities
 						yield return a;
 			}
 
-			if (this is T)
-				yield return (T)(object)this;
-
 			var na = NextActivity;
 			if (na != null)
 				foreach (var a in na.ActivitiesImplementing<T>())

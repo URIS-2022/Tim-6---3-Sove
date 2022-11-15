@@ -587,7 +587,7 @@ namespace OpenRA
 
 		public static void LoadField(object target, string key, string value)
 		{
-			const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+			const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
 
 			key = key.Trim();
 
