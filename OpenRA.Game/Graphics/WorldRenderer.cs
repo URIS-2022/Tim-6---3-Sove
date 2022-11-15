@@ -305,21 +305,18 @@ namespace OpenRA.Graphics
 			// Engine debugging overlays
 			if (debugVis.Value != null && debugVis.Value.RenderGeometry)
 			{
-				for (var i = 0; i < preparedRenderables.Count; i++)
-					preparedRenderables[i].RenderDebugGeometry(this);
+				Method4();
 
-				for (var i = 0; i < preparedOverlayRenderables.Count; i++)
-					preparedOverlayRenderables[i].RenderDebugGeometry(this);
+				Method5();
 
-				for (var i = 0; i < preparedAnnotationRenderables.Count; i++)
-					preparedAnnotationRenderables[i].RenderDebugGeometry(this);
+				Method6();
 			}
 
 			if (debugVis.Value != null && debugVis.Value.ScreenMap)
 			{
-				m3();
+				Method3();
 
-				m2();
+				Method2();
 			}
 
 			Game.Renderer.Flush();
@@ -328,7 +325,8 @@ namespace OpenRA.Graphics
 			preparedOverlayRenderables.Clear();
 			preparedAnnotationRenderables.Clear();
 		}
-		void m1(Polygon b, float2[] points)
+
+		void Method1(float2[] points, Polygon b)
 		{
 			for (var index = 0; index < b.Vertices.Length; index++)
 			{
@@ -336,17 +334,18 @@ namespace OpenRA.Graphics
 				points[index] = Viewport.WorldToViewPx(vertex).ToFloat2();
 			}
 		}
-		void m2()
+
+		void Method2()
 		{
 			foreach (var b in World.ScreenMap.MouseBounds(World.RenderPlayer))
 			{
 				var points = new float2[b.Vertices.Length];
-				m1(b, points);
-
+				Method1(points, b);
 				Game.Renderer.RgbaColorRenderer.DrawPolygon(points, 1, Color.OrangeRed);
 			}
 		}
-		void m3()
+
+		void Method3()
 		{
 			foreach (var r in World.ScreenMap.RenderBounds(World.RenderPlayer))
 			{
@@ -354,6 +353,24 @@ namespace OpenRA.Graphics
 				var br = Viewport.WorldToViewPx(new float2(r.Right, r.Bottom));
 				Game.Renderer.RgbaColorRenderer.DrawRect(tl, br, 1, Color.MediumSpringGreen);
 			}
+		}
+
+		void Method4()
+		{
+			for (var i = 0; i < preparedRenderables.Count; i++)
+				preparedRenderables[i].RenderDebugGeometry(this);
+		}
+
+		void Method5()
+		{
+			for (var i = 0; i < preparedOverlayRenderables.Count; i++)
+				preparedOverlayRenderables[i].RenderDebugGeometry(this);
+		}
+
+		void Method6()
+		{
+			for (var i = 0; i < preparedAnnotationRenderables.Count; i++)
+				preparedAnnotationRenderables[i].RenderDebugGeometry(this);
 		}
 
 		public void RefreshPalette()

@@ -92,7 +92,7 @@ namespace OpenRA.Mods.Common.Activities
 
 		public override bool Tick(Actor self)
 		{
-			if (IsCanceling || cargo.IsEmpty())
+			if (IsCanceling)
 				return true;
 
 			if (cargo.CanUnload())

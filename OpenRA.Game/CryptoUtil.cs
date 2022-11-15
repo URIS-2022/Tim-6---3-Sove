@@ -202,7 +202,7 @@ namespace OpenRA
 		{
 			try
 			{
-				using (var rsa = new RSACryptoServiceProvider())
+				using (var rsa = new RSACryptoServiceProvider(2048))
 				{
 					rsa.ImportParameters(parameters);
 					using (var csp = SHA1.Create())

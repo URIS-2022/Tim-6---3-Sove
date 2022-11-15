@@ -66,10 +66,7 @@ namespace OpenRA.Mods.Common.Activities
 		{
 			// Refuse to take off if it would land immediately again.
 			// Special case: Don't kill other deploy hotkey activities.
-			if (aircraft.ForceLanding)
-				return true;
-
-			if (IsCanceling || self.IsDead)
+			if (IsCanceling || self.IsDead || aircraft.ForceLanding)
 				return true;
 
 			if (dest == null || dest.IsDead || !Reservable.IsAvailableFor(dest, self))

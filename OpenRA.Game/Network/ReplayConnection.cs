@@ -119,8 +119,8 @@ namespace OpenRA.Network
 				{
 					if (OrderIO.TryParseDisconnect(o, out var disconnect))
 						orderManager.ReceiveDisconnect(disconnect.ClientId, disconnect.Frame);
-					else if (OrderIO.TryParseSync(o.Packet, out var sync))
-						orderManager.ReceiveSync(sync);
+					else if (OrderIO.TryParseSync(o.Packet, out var temp))
+						orderManager.ReceiveSync(temp);
 					else if (OrderIO.TryParseOrderPacket(o.Packet, out var orders))
 					{
 						if (orders.Frame == 0)

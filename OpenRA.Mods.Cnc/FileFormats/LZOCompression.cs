@@ -100,7 +100,6 @@ namespace OpenRA.Mods.Cnc.FileFormats
 				if (gtFirstLiteralRun)
 				{
 					gtFirstLiteralRun = false;
-					goto first_literal_run;
 				}
 
 				t = *ip++;

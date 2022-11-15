@@ -17,7 +17,7 @@ namespace OpenRA.Mods.Cnc.UtilityCommands
 {
 	public static class Glob
 	{
-		public static bool Enabled = true;
+		public static readonly bool Enabled = true;
 
 		static readonly char[] GlobChars = new char[] { '*', '?' };
 		static readonly char[] DirectorySeparators = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };

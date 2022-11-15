@@ -75,9 +75,9 @@ namespace OpenRA
 			else if (ex is OutOfMemoryException)
 			{
 				var gcMemoryBeforeCollect = GC.GetTotalMemory(false);
-				GC.Collect();
+
 				GC.WaitForPendingFinalizers();
-				GC.Collect();
+
 				sb.AppendIndentedFormatLine(indent, $"GC Memory (post-collect)={GC.GetTotalMemory(false):N0}");
 				sb.AppendIndentedFormatLine(indent, $"GC Memory (pre-collect)={gcMemoryBeforeCollect:N0}");
 
