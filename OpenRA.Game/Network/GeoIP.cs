@@ -78,7 +78,7 @@ namespace OpenRA.Network
 				return country != "-" ? country : null;
 			}
 
-			public string LookupCountry(IPAddress ip)
+			public string LookupCountryMethod(IPAddress ip)
 			{
 				var isIPv6 = ip.AddressFamily == AddressFamily.InterNetworkV6;
 				if (!isIPv6 && ip.AddressFamily != AddressFamily.InterNetwork)
@@ -138,7 +138,7 @@ namespace OpenRA.Network
 			{
 				try
 				{
-					return database.LookupCountry(ip);
+					return database.LookupCountryMethod(ip);
 				}
 				catch (Exception e)
 				{
