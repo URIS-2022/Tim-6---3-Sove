@@ -186,8 +186,7 @@ namespace OpenRA.Platforms.Default
 					// Launch the game with OPENRA_DISPLAY_SCALE to force a specific scaling factor
 					// Otherwise fall back to Windows's DPI configuration
 					var scaleVariable = Environment.GetEnvironmentVariable("OPENRA_DISPLAY_SCALE");
-					if (scaleVariable == null || !float.TryParse(scaleVariable, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out windowScale) || windowScale <= 0)
-						if (SDL.SDL_GetDisplayDPI(videoDisplay, out var ddpi, out _, out _) == 0)
+					if ((scaleVariable == null || !float.TryParse(scaleVariable, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out windowScale) || windowScale <= 0) && (SDL.SDL_GetDisplayDPI(videoDisplay, out var ddpi, out _, out _) == 0))
 							windowScale = ddpi / 96;
 				}
 				else if (Platform.CurrentPlatform == PlatformType.Linux)

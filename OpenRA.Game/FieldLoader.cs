@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -30,7 +31,7 @@ namespace OpenRA
 		public class MissingFieldsException : YamlException, ISerializable
 		{
 			[NonSerialized]
-			public readonly string[] Missing;
+			public string[] Missing;
 			[NonSerialized]
 			public readonly string Header;
 			public override string Message

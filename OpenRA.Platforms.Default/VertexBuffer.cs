@@ -55,16 +55,16 @@ namespace OpenRA.Platforms.Default
 			}
 		}
 
-		public void SetData(T[] data, int length)
+		public void SetData(T[] vertices, int length)
 		{
-			SetData(data, 0, 0, length);
+			SetData(vertices, 0, 0, length);
 		}
 
-		public void SetData(T[] data, int offset, int start, int length)
+		public void SetData(T[] vertices, int offset, int start, int length)
 		{
 			Bind();
 
-			var ptr = GCHandle.Alloc(data, GCHandleType.Pinned);
+			var ptr = GCHandle.Alloc(vertices, GCHandleType.Pinned);
 			try
 			{
 				OpenGL.glBufferSubData(OpenGL.GL_ARRAY_BUFFER,

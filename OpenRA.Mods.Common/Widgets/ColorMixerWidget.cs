@@ -20,8 +20,12 @@ namespace OpenRA.Mods.Common.Widgets
 	{
 		readonly Ruleset modRules;
 
-		public string ClickSound = ChromeMetrics.Get<string>("ClickSound");
-
+		string ClickSound;
+		public string ClickSoundM
+		{
+			get {return ClickSound;}
+			set { ClickSound = "ClickSound";}
+		}
 		public event Action OnChange = () => { };
 
 		public float H { get; private set; }
@@ -67,8 +71,10 @@ namespace OpenRA.Mods.Common.Widgets
 				{
 					var c = (int*)cc;
 					for (var s = 0; s < 256; s++)
-					for (var h = 0; h < 256; h++)
-						(*(c + s * 256 + h)) = Color.FromAhsv(h / 255f, 1 - s / 255f, V).ToArgb();
+					{
+						for (var h = 0; h < 256; h++)
+							(*(c + s * 256 + h)) = Color.FromAhsv(h / 255f, 1 - s / 255f, V).ToArgb();
+					}
 				}
 			}
 
