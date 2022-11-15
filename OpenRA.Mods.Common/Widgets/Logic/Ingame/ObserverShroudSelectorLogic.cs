@@ -231,16 +231,40 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			// Fix the selector if something else has changed the render player
 			if (selected != null && world.RenderPlayer != selected.Player)
 			{
-				if (combined.Player == world.RenderPlayer)
+				m4();
+				/*if (combined.Player == world.RenderPlayer)
 					combined.OnClick();
 				else if (disableShroud.Player == world.RenderPlayer)
 					disableShroud.OnClick();
 				else
-					foreach (var group in teams)
-						foreach (var option in group)
-							if (option.Player == world.RenderPlayer)
-								option.OnClick();
+					m3();*/
 			}
+		}
+
+		void m1(CameraOption option)
+		{
+			if (option.Player == world.RenderPlayer)
+				option.OnClick();
+		}
+		void m2(IGrouping<int,CameraOption> group)
+		{
+			foreach (var option in group)
+				m1(option);
+		}
+
+		void m3()
+		{
+			foreach (var group in teams)
+				m2(group);
+		}
+		void m4()
+		{
+			if (combined.Player == world.RenderPlayer)
+				combined.OnClick();
+			else if (disableShroud.Player == world.RenderPlayer)
+				disableShroud.OnClick();
+			else
+				m3();
 		}
 	}
 }

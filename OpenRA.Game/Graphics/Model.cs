@@ -66,7 +66,9 @@ namespace OpenRA.Graphics
 		{
 			public IVertexBuffer<Vertex> VertexBuffer => throw new NotImplementedException();
 
-			public void Dispose() { }
+			public void Dispose() {
+				throw new NotSupportedException();
+			}
 
 			public IModel GetModel(string model)
 			{

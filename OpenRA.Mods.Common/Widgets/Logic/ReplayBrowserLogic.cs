@@ -616,8 +616,6 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 					case DateType.LastFortnight:
 						t = TimeSpan.FromDays(14d);
 						break;
-
-					case DateType.LastMonth:
 					default:
 						t = TimeSpan.FromDays(30d);
 						break;

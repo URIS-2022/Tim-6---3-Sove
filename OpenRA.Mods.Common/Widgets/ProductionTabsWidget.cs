@@ -293,10 +293,7 @@ namespace OpenRA.Mods.Common.Widgets
 
 			if (leftPressed || rightPressed)
 			{
-				if ((leftPressed && !leftDisabled) || (rightPressed && !rightDisabled))
-					Game.Sound.PlayNotification(world.Map.Rules, null, "Sounds", ClickSound, null);
-				else
-					Game.Sound.PlayNotification(world.Map.Rules, null, "Sounds", ClickDisabledSound, null);
+				m1(leftPressed,rightDisabled, leftDisabled);
 			}
 
 			// Check production tabs
@@ -308,6 +305,13 @@ namespace OpenRA.Mods.Common.Widgets
 			}
 
 			return true;
+		}
+		void m1(bool leftPressed, bool rightDisabled,bool leftDisabled)
+		{
+			if ((leftPressed && !leftDisabled) || (rightPressed && !rightDisabled))
+				Game.Sound.PlayNotification(world.Map.Rules, null, "Sounds", ClickSound, null);
+			else
+				Game.Sound.PlayNotification(world.Map.Rules, null, "Sounds", ClickDisabledSound, null);
 		}
 
 		public override bool HandleKeyPress(KeyInput e)
