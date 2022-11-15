@@ -65,7 +65,7 @@ namespace OpenRA.Mods.Common.Graphics
 		}
 
 		public IRenderable WithZOffset(int newOffset) { return this; }
-		public IRenderable OffsetBy(in WVec vec) { return this; }
+		public IRenderable OffsetBy(in WVec offset) { return this; }
 		public IRenderable AsDecoration() { return this; }
 
 		public IFinalizedRenderable PrepareRender(WorldRenderer wr)

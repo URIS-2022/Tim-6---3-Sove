@@ -29,7 +29,7 @@ namespace OpenRA.Mods.Common.UtilityCommands
 		void IUtilityCommand.Run(Utility utility, string[] args)
 		{
 			// HACK: The engine code assumes that Game.modData is set.
-			var modData = Game.ModData = utility.ModData;
+			var modData = utility.ModData;
 			var failed = false;
 
 			// We need two levels of YamlException handling to provide the desired behaviour:

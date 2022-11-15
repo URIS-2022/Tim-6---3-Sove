@@ -16,7 +16,11 @@ namespace OpenRA
 	public class NullInputHandler : IInputHandler
 	{
 		// ignore all input
-		public void ModifierKeys(Modifiers mods) { }
+		public void ModifierKeys(Modifiers mods)
+		{
+			// Still not implemented
+		}
+
 		public void OnKeyInput(KeyInput input) { }
 		public void OnTextInput(string text) { }
 		public void OnMouseInput(MouseInput input) { }
